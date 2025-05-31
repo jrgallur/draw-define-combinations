@@ -1,12 +1,8 @@
 package com.draw_define_combinations.usecases;
 
-import com.draw_define_combinations.models.DrawList;
 import com.draw_define_combinations.models.NumberProbabilityType;
 import com.draw_define_combinations.models.ProbabilityTypeCombination;
 import com.draw_define_combinations.models.ProbabilityTypeWeight;
-import com.draw_define_combinations.models.types.TDateInteger;
-import com.draw_define_combinations.ports.driven.DrawDatasourcePort;
-import com.draw_define_combinations.ports.driven.NumberProbabilityListPort;
 import com.draw_define_combinations.ports.driven.NumberProbabilityTypePort;
 import com.draw_define_combinations.services.GenerateCombinationTypes;
 import lombok.AllArgsConstructor;
@@ -22,20 +18,12 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class CalculateCombinationsUseCase {
-    private final DrawDatasourcePort drawDatasourcePort;
-    private final NumberProbabilityListPort numberProbabilityListPort;
     private final NumberProbabilityTypePort numberProbabilityTypePort;
 
     @Autowired
     private ApplicationContext context;
 
     public void executeAll() {
-        DrawList drawList = drawDatasourcePort.getDrawList();
-        TDateInteger firstDrawDate = drawList.findFirstDrawDateFromDate(new TDateInteger(19950101)); // Descartamos los anteriores como irrelevantes
-        combineCalculators(drawList,new TDateInteger(19950101));
-    }
-
-    private void combineCalculators(DrawList drawList, TDateInteger firstDrawDate) {
         getCombinationList();
     }
 
