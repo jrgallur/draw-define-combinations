@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 public class ProbabilityTypeWeightMO {
     @Id
     @ManyToOne
-    @JoinColumn(name="id", nullable=false)
+    @JoinColumn(name="probability_type_combination_id", nullable=false)
     private ProbabilityTypeCombinationMO probabilityTypeCombinationId;
 
     @Id

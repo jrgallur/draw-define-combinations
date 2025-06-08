@@ -23,6 +23,6 @@ public class ProbabilityTypeCombinationMO {
     @Column(name="code")
     private String code;
 
-    @OneToMany(mappedBy="probabilityTypeCombinationId")
+    @OneToMany(mappedBy = "probabilityTypeCombinationId", cascade = CascadeType.ALL)
     private List<ProbabilityTypeWeightMO> probabilityTypeWeightMOList;
 }

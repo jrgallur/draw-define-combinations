@@ -4,19 +4,20 @@ package com.draw_define_combinations.services;
 import com.draw_define_combinations.models.NumberProbabilityType;
 import com.draw_define_combinations.models.ProbabilityTypeCombination;
 import com.draw_define_combinations.models.ProbabilityTypeWeight;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class GenerateCombinationTypes {
-    private static final BigDecimal STEP = BigDecimal.valueOf(0.1);
+@Service
+@NoArgsConstructor
+public class CombinationTypeService {
+    private static final BigDecimal STEP = BigDecimal.valueOf(0.2);
 
-    private GenerateCombinationTypes() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    public static List<ProbabilityTypeCombination> getCombinationsFromTypeList(List<NumberProbabilityType> numberProbabilityTypeList) {
+    public List<ProbabilityTypeCombination> getCombinationsFromTypeList(List<NumberProbabilityType> numberProbabilityTypeList) {
         return new ArrayList<>(getCombinationsOrderN(numberProbabilityTypeList));
     }
 
@@ -25,14 +26,37 @@ public class GenerateCombinationTypes {
      * The sum of all of them must be 1
      * The vales must be STEP multiples (0, 0.1, 0.2, ..., 0.9, 1.0)
      */
-    public static List<ProbabilityTypeCombination> getCombinationsOrderN(List<NumberProbabilityType> types) {
+    public List<ProbabilityTypeCombination> getCombinationsOrderN(List<NumberProbabilityType> types) {
         List<ProbabilityTypeCombination> result = new ArrayList<>();
 
         generateCombinations(types, new ArrayList<>(), BigDecimal.ZERO, STEP, result);
+        setCombinationsCodes(result);
         return result;
     }
 
-    private static void generateCombinations(List<NumberProbabilityType> types,
+    private void setCombinationsCodes(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
+        for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
+            sortProbabilityTypeWeightList(probabilityTypeCombination.getCombinationList());
+            probabilityTypeCombination.setCode(getCodeFromCombinationTypeWeightList(probabilityTypeCombination.getCombinationList()));
+        }
+    }
+
+    private void sortProbabilityTypeWeightList(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
+        probabilityTypeWeightList.sort(Comparator.comparing(p -> p.getNumberProbabilityType().getCode()));
+    }
+    private String getCodeFromCombinationTypeWeightList(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
+        StringBuilder result = new StringBuilder();
+        for (ProbabilityTypeWeight probabilityTypeWeight : probabilityTypeWeightList) {
+            if (!result.isEmpty()) {
+                result.append("#");
+            }
+            result.append(probabilityTypeWeight.getNumberProbabilityType().getCode()).append("[").append(probabilityTypeWeight.getPrettyWeight()).append("]");
+        }
+
+        return result.toString();
+    }
+
+    private void generateCombinations(List<NumberProbabilityType> types,
                                       List<BigDecimal> currentWeights,
                                       BigDecimal currentSum,
                                       BigDecimal step,
@@ -77,10 +101,9 @@ public class GenerateCombinationTypes {
         }
     }
 
-    private static boolean isValidWeight(BigDecimal weight) {
+    private boolean isValidWeight(BigDecimal weight) {
         // Aceptar solo pesos múltiplos del paso
         return weight.remainder(STEP).compareTo(BigDecimal.ZERO) == 0;
     }
-
 
 }
