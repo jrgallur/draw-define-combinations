@@ -36,6 +36,7 @@ public class CombinationTypeService {
 
     private void setCombinationsCodes(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
         for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
+            probabilityTypeCombination.setCombinationList(deleteEmptyProbabilityTypeWeightListItems(probabilityTypeCombination.getCombinationList()));
             sortProbabilityTypeWeightList(probabilityTypeCombination.getCombinationList());
             probabilityTypeCombination.setCode(getCodeFromCombinationTypeWeightList(probabilityTypeCombination.getCombinationList()));
         }
@@ -44,6 +45,16 @@ public class CombinationTypeService {
     private void sortProbabilityTypeWeightList(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
         probabilityTypeWeightList.sort(Comparator.comparing(p -> p.getNumberProbabilityType().getCode()));
     }
+
+    /**
+     * Only save if the weight is greater than zero
+     * @param probabilityTypeWeightList The list with the weights to evalate
+     * @return The list without the weights if they are zero
+     */
+    private List<ProbabilityTypeWeight> deleteEmptyProbabilityTypeWeightListItems(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
+        return new ArrayList<>(probabilityTypeWeightList.stream().filter(probabilityTypeWeight -> probabilityTypeWeight.getWeight().compareTo(BigDecimal.ZERO) > 0).toList());
+    }
+
     private String getCodeFromCombinationTypeWeightList(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
         StringBuilder result = new StringBuilder();
         for (ProbabilityTypeWeight probabilityTypeWeight : probabilityTypeWeightList) {
