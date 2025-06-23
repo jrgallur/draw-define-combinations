@@ -1,9 +1,9 @@
 package com.draw_define_combinations.services;
 
 
-import com.draw_define_combinations.models.NumberProbabilityType;
+import com.draw_define_combinations.models.ProbabilityType;
 import com.draw_define_combinations.models.ProbabilityTypeCombination;
-import com.draw_define_combinations.models.ProbabilityTypeWeight;
+import com.draw_define_combinations.models.ProbabilityTypeCombinationWeight;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +17,8 @@ import java.util.List;
 public class CombinationTypeService {
     private static final BigDecimal STEP = BigDecimal.valueOf(0.2);
 
-    public List<ProbabilityTypeCombination> getCombinationsFromTypeList(List<NumberProbabilityType> numberProbabilityTypeList) {
-        return new ArrayList<>(getCombinationsOrderN(numberProbabilityTypeList));
+    public List<ProbabilityTypeCombination> calculateCombinationsFromTypeList(List<ProbabilityType> probabilityTypeList) {
+        return new ArrayList<>(getCombinationsOrderN(probabilityTypeList));
     }
 
     /**
@@ -26,7 +26,7 @@ public class CombinationTypeService {
      * The sum of all of them must be 1
      * The vales must be STEP multiples (0, 0.1, 0.2, ..., 0.9, 1.0)
      */
-    public List<ProbabilityTypeCombination> getCombinationsOrderN(List<NumberProbabilityType> types) {
+    public List<ProbabilityTypeCombination> getCombinationsOrderN(List<ProbabilityType> types) {
         List<ProbabilityTypeCombination> result = new ArrayList<>();
 
         generateCombinations(types, new ArrayList<>(), BigDecimal.ZERO, STEP, result);
@@ -42,32 +42,32 @@ public class CombinationTypeService {
         }
     }
 
-    private void sortProbabilityTypeWeightList(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
-        probabilityTypeWeightList.sort(Comparator.comparing(p -> p.getNumberProbabilityType().getCode()));
+    private void sortProbabilityTypeWeightList(List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList) {
+        probabilityTypeCombinationWeightList.sort(Comparator.comparing(p -> p.getProbabilityType().getCode()));
     }
 
     /**
      * Only save if the weight is greater than zero
-     * @param probabilityTypeWeightList The list with the weights to evalate
+     * @param probabilityTypeCombinationWeightList The list with the weights to evalate
      * @return The list without the weights if they are zero
      */
-    private List<ProbabilityTypeWeight> deleteEmptyProbabilityTypeWeightListItems(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
-        return new ArrayList<>(probabilityTypeWeightList.stream().filter(probabilityTypeWeight -> probabilityTypeWeight.getWeight().compareTo(BigDecimal.ZERO) > 0).toList());
+    private List<ProbabilityTypeCombinationWeight> deleteEmptyProbabilityTypeWeightListItems(List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList) {
+        return new ArrayList<>(probabilityTypeCombinationWeightList.stream().filter(probabilityTypeCombinationWeight -> probabilityTypeCombinationWeight.getWeight().compareTo(BigDecimal.ZERO) > 0).toList());
     }
 
-    private String getCodeFromCombinationTypeWeightList(List<ProbabilityTypeWeight> probabilityTypeWeightList) {
+    private String getCodeFromCombinationTypeWeightList(List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList) {
         StringBuilder result = new StringBuilder();
-        for (ProbabilityTypeWeight probabilityTypeWeight : probabilityTypeWeightList) {
+        for (ProbabilityTypeCombinationWeight probabilityTypeCombinationWeight : probabilityTypeCombinationWeightList) {
             if (!result.isEmpty()) {
                 result.append("#");
             }
-            result.append(probabilityTypeWeight.getNumberProbabilityType().getCode()).append("[").append(probabilityTypeWeight.getPrettyWeight()).append("]");
+            result.append(probabilityTypeCombinationWeight.getProbabilityType().getCode()).append("[").append(probabilityTypeCombinationWeight.getPrettyWeight()).append("]");
         }
 
         return result.toString();
     }
 
-    private void generateCombinations(List<NumberProbabilityType> types,
+    private void generateCombinations(List<ProbabilityType> types,
                                       List<BigDecimal> currentWeights,
                                       BigDecimal currentSum,
                                       BigDecimal step,
@@ -84,11 +84,11 @@ public class CombinationTypeService {
                 List<BigDecimal> finalWeights = new ArrayList<>(currentWeights);
                 finalWeights.add(lastWeight);
 
-                ProbabilityTypeCombination combination = new ProbabilityTypeCombination();
+                ProbabilityTypeCombination combination = ProbabilityTypeCombination.builder().build();
                 for (int i = 0; i < size; i++) {
                     combination.addProbabilityTypeWeight(
-                            ProbabilityTypeWeight.builder()
-                                    .numberProbabilityType(types.get(i))
+                            ProbabilityTypeCombinationWeight.builder()
+                                    .probabilityType(types.get(i))
                                     .weight(finalWeights.get(i))
                                     .build()
                     );

@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @Data
 @Builder
-public class NumberProbabilityType {
+public class ProbabilityType {
     private Short id;
     private String code;
     private String description;

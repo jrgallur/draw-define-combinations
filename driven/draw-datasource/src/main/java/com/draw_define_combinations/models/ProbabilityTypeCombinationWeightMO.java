@@ -15,9 +15,9 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @Entity
-@Table(name = "probability_type_weight")
+@Table(name = "probability_type_combination_weight")
 @IdClass(ProbabilityTypeWeightId.class)
-public class ProbabilityTypeWeightMO {
+public class ProbabilityTypeCombinationWeightMO {
     @Id
     @ManyToOne
     @JoinColumn(name="probability_type_combination_id", nullable=false)

@@ -12,12 +12,14 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
+@Builder
 public class ProbabilityTypeCombination {
     private String code;
-    private List<ProbabilityTypeWeight> combinationList = new ArrayList<>();
+    @Builder.Default
+    private List<ProbabilityTypeCombinationWeight> combinationList = new ArrayList<>();
 
-    public void addProbabilityTypeWeight(ProbabilityTypeWeight probabilityTypeWeight) {
-        combinationList.add(probabilityTypeWeight);
+    public void addProbabilityTypeWeight(ProbabilityTypeCombinationWeight probabilityTypeCombinationWeight) {
+        combinationList.add(probabilityTypeCombinationWeight);
     }
 
     public String getCode() {
@@ -26,16 +28,16 @@ public class ProbabilityTypeCombination {
         }
 
         if (code==null) {
-            List<ProbabilityTypeWeight> combinationAux = new ArrayList<>(getCombinationList());
+            List<ProbabilityTypeCombinationWeight> combinationAux = new ArrayList<>(getCombinationList());
             combinationAux.sort(
-                    Comparator.comparing(p -> p.getNumberProbabilityType().getCode())
+                    Comparator.comparing(p -> p.getProbabilityType().getCode())
             );
             StringBuilder sb = new StringBuilder();
-            for (ProbabilityTypeWeight row : combinationAux) {
+            for (ProbabilityTypeCombinationWeight row : combinationAux) {
                 if (!sb.isEmpty()) {
                     sb.append("#");
                 }
-                sb.append("#").append(row.getNumberProbabilityType().getCode());
+                sb.append("#").append(row.getProbabilityType().getCode());
             }
             code = sb.toString();
         }

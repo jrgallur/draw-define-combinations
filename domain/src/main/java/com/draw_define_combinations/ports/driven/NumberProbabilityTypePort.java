@@ -1,11 +1,11 @@
 package com.draw_define_combinations.ports.driven;
 
-import com.draw_define_combinations.models.NumberProbabilityType;
+import com.draw_define_combinations.models.ProbabilityType;
 
 import java.util.List;
 
 public interface NumberProbabilityTypePort {
-    NumberProbabilityType getByCode(String code);
+    ProbabilityType getByCode(String code);
 
-    List<NumberProbabilityType> findAll();
+    List<ProbabilityType> findAll();
 }

@@ -24,5 +24,5 @@ public class ProbabilityTypeCombinationMO {
     private String code;
 
     @OneToMany(mappedBy = "probabilityTypeCombinationId", cascade = CascadeType.ALL)
-    private List<ProbabilityTypeWeightMO> probabilityTypeWeightMOList;
+    private List<ProbabilityTypeCombinationWeightMO> probabilityTypeCombinationWeightMOList;
 }

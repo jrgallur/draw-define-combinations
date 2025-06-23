@@ -8,13 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ProbabilityTypeCombinatorAdapter implements ProbabilityTypeCombinationPort {
+public class ProbabilityTypeCombinationAdapter implements ProbabilityTypeCombinationPort {
     private final ProbabilityTypeCombinationRepository repository;
     private final ProbabilityTypeCombinationMapper mapper;
-
 
     @Override
     public boolean existsByCode(String code) {
@@ -24,5 +25,10 @@ public class ProbabilityTypeCombinatorAdapter implements ProbabilityTypeCombinat
     @Override
     public void upsert(ProbabilityTypeCombination probabilityTypeCombination) {
         repository.save(mapper.toModel(probabilityTypeCombination));
+    }
+
+    @Override
+    public List<ProbabilityTypeCombination> getAllProbabilityTypeCombinationList() {
+        return repository.findAllWithProbabilityTypeCombinationWeightMOList().stream().map(mapper::toDomain).toList();
     }
 }

@@ -1,12 +1,12 @@
 package com.draw_define_combinations.mappers;
 
-import com.draw_define_combinations.models.NumberProbabilityType;
+import com.draw_define_combinations.models.ProbabilityType;
 import com.draw_define_combinations.models.NumberProbabilityTypeMO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface NumberProbabilityTypeMapper {
-    NumberProbabilityTypeMO toModel(NumberProbabilityType numberProbabilityType);
+    NumberProbabilityTypeMO toModel(ProbabilityType probabilityType);
 
-    NumberProbabilityType toDomain(NumberProbabilityTypeMO numberProbabilityTypeMO);
+    ProbabilityType toDomain(NumberProbabilityTypeMO numberProbabilityTypeMO);
 }

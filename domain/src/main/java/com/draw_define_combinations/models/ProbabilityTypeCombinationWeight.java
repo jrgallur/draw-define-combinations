@@ -8,8 +8,8 @@ import java.text.DecimalFormat;
 
 @Data
 @Builder
-public class ProbabilityTypeWeight {
-    NumberProbabilityType numberProbabilityType;
+public class ProbabilityTypeCombinationWeight {
+    ProbabilityType probabilityType;
     BigDecimal weight;
 
     public String getPrettyWeight() {

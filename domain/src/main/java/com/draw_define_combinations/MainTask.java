@@ -9,16 +9,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class MainTask implements CommandLineRunner {
 
-    private final CalculateCombinationsUseCase service;
+    private final CalculateCombinationsUseCase useCase;
 
     public MainTask(CalculateCombinationsUseCase calculateCombinations) {
-        this.service = calculateCombinations;
+        this.useCase = calculateCombinations;
     }
 
     @Override
     public void run(String... args) throws Exception {
         log.info("Iniciando tarea principal...");
-        service.executeAll();
+        useCase.calculateAndSaveUnexistantCombinations();
+        useCase.saveProbabilityCombinations();
         log.info("Tarea completada.");
     }
 }
