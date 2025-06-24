@@ -18,11 +18,12 @@ import java.util.List;
 public class ProbabilityTypeCombinationMO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Integer id;
 
     @Column(name="code")
     private String code;
 
-    @OneToMany(mappedBy = "probabilityTypeCombinationId", cascade = CascadeType.ALL)
-    private List<ProbabilityTypeCombinationWeightMO> probabilityTypeCombinationWeightMOList;
+    @OneToMany(mappedBy = "probabilityTypeCombination", cascade = CascadeType.ALL)
+    private List<ProbabilityTypeCombinationWeightMO> probabilityTypeCombinationWeightList;
 }

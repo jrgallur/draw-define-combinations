@@ -14,21 +14,24 @@ import java.util.List;
 @Setter
 @Builder
 public class ProbabilityTypeCombination {
+    private Integer id;
+
     private String code;
+
     @Builder.Default
-    private List<ProbabilityTypeCombinationWeight> combinationList = new ArrayList<>();
+    private List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList = new ArrayList<>();
 
     public void addProbabilityTypeWeight(ProbabilityTypeCombinationWeight probabilityTypeCombinationWeight) {
-        combinationList.add(probabilityTypeCombinationWeight);
+        probabilityTypeCombinationWeightList.add(probabilityTypeCombinationWeight);
     }
 
     public String getCode() {
-        if (code==null && combinationList.isEmpty()) {
+        if (code==null && probabilityTypeCombinationWeightList.isEmpty()) {
             return null;
         }
 
         if (code==null) {
-            List<ProbabilityTypeCombinationWeight> combinationAux = new ArrayList<>(getCombinationList());
+            List<ProbabilityTypeCombinationWeight> combinationAux = new ArrayList<>(getProbabilityTypeCombinationWeightList());
             combinationAux.sort(
                     Comparator.comparing(p -> p.getProbabilityType().getCode())
             );

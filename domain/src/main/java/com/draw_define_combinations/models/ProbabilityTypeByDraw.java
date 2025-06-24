@@ -13,12 +13,12 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-public class DrawProbabilityType {
+public class ProbabilityTypeByDraw {
     private List<BigDecimal> numberList;
     private TDateInteger calculateDrawDate;
     private ProbabilityType type;
 
-    public DrawProbabilityType() {
+    public ProbabilityTypeByDraw() {
         numberList = new ArrayList<>(Collections.nCopies(49, new BigDecimal(0)));
     }
 

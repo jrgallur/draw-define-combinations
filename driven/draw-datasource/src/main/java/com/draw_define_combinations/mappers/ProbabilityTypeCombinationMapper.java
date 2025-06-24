@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = ProbabilityTypeCombinationWeightMapper.class)
 public interface ProbabilityTypeCombinationMapper {
     default ProbabilityTypeCombinationMO toModel(ProbabilityTypeCombination domain) {
         if (domain == null) {
@@ -17,41 +17,24 @@ public interface ProbabilityTypeCombinationMapper {
         result.setCode(domain.getCode());
 
         // Mapeamos la lista de pesos
-        if (domain.getCombinationList() != null) {
-            List<ProbabilityTypeCombinationWeightMO> weightMOList = new ArrayList<>(domain.getCombinationList()
+        if (domain.getProbabilityTypeCombinationWeightList() != null) {
+            List<ProbabilityTypeCombinationWeightMO> weightMOList = new ArrayList<>(domain.getProbabilityTypeCombinationWeightList()
                     .stream()
                     .map(weight -> {
                         ProbabilityTypeCombinationWeightMO weightMO = new ProbabilityTypeCombinationWeightMO();
-                        weightMO.setProbabilityTypeCombinationId(result);
+                        weightMO.setProbabilityTypeCombination(result);
+                        weightMO.setProbabilityTypeCombinationId(result.getId());
                         weightMO.setProbabilityTypeCode(weight.getProbabilityType().getCode());
+                        weightMO.setProbabilityTypeId(weight.getProbabilityType().getId());
                         weightMO.setWeight(weight.getWeight());
                         return weightMO;
                     })
                     .toList());
 
-            result.setProbabilityTypeCombinationWeightMOList(weightMOList);
+            result.setProbabilityTypeCombinationWeightList(weightMOList);
         }
 
         return result;
     }
-
-    default ProbabilityTypeCombination toDomain(ProbabilityTypeCombinationMO model) {
-        if (model == null) {
-            return null;
-        }
-
-        return ProbabilityTypeCombination.builder()
-                .code(model.getCode())
-                .combinationList(model.getProbabilityTypeCombinationWeightMOList().stream().map(this::toDomain).toList())
-                .build();
-    }
-
-    default ProbabilityTypeCombinationWeight toDomain(ProbabilityTypeCombinationWeightMO model) {
-        return ProbabilityTypeCombinationWeight.builder()
-                .probabilityType(ProbabilityType.builder()
-                        .code(model.getProbabilityTypeCode())
-                        .build())
-                .weight(model.getWeight())
-                .build();
-    }
+    ProbabilityTypeCombination toDomain(ProbabilityTypeCombinationMO mo);
 }

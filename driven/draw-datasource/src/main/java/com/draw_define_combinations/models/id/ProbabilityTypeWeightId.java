@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Builder
 public class ProbabilityTypeWeightId implements Serializable {
     private Integer probabilityTypeCombinationId;
-    private String probabilityTypeCode;
+    private Integer probabilityTypeId;
 }

@@ -10,7 +10,7 @@ import lombok.*;
 @Data
 @Builder
 public class ProbabilityType {
-    private Short id;
+    private Integer id;
     private String code;
     private String description;
 }

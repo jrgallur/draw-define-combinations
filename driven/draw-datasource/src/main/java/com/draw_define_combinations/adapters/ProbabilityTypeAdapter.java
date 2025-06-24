@@ -1,9 +1,9 @@
 package com.draw_define_combinations.adapters;
 
-import com.draw_define_combinations.mappers.DrawProbabilityTypeMapper;
-import com.draw_define_combinations.models.DrawProbabilityType;
+import com.draw_define_combinations.mappers.ProbabilityTypeMapper;
+import com.draw_define_combinations.models.ProbabilityType;
 import com.draw_define_combinations.ports.driven.ProbabilityTypePort;
-import com.draw_define_combinations.repositories.NumberProbabilityListRepository;
+import com.draw_define_combinations.repositories.ProbabilityTypeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,11 +14,17 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class ProbabilityTypeAdapter implements ProbabilityTypePort {
-    private final NumberProbabilityListRepository repository;
-    private final DrawProbabilityTypeMapper mapper;
+    private final ProbabilityTypeRepository repository;
+    private final ProbabilityTypeMapper mapper;
+
 
     @Override
-    public List<DrawProbabilityType> findByProbabilityTypeId(Short probabilityTypeId) {
-        return repository.findByNumberProbabilityTypeId(probabilityTypeId).stream().map(mapper::toDomain).toList();
+    public ProbabilityType getByCode(String code) {
+        return mapper.toDomain(repository.findByCode(code).orElse(null));
+    }
+
+    @Override
+    public List<ProbabilityType> findAll() {
+        return repository.findAll().stream().map(mapper::toDomain).toList();
     }
 }
