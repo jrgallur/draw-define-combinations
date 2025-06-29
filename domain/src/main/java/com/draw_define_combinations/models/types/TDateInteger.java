@@ -64,6 +64,10 @@ public class TDateInteger implements Comparable<TDateInteger> {
         date = new GregorianCalendar();
     }
 
+    public static TDateInteger today() {
+        return new TDateInteger();
+    }
+
     /**
      * Devuelve un gregorian calendar en el formato yyyyMMdd
      *
@@ -108,11 +112,11 @@ public class TDateInteger implements Comparable<TDateInteger> {
     }
 
     public void setDate(String date) {
-            String dateFormat = determineDateFormat(date);
-            if (dateFormat == null) {
-                throw new IllegalArgumentException("Can't determine date format in [" + date + "]");
-            }
-            this.date = new GregorianCalendar();
+        String dateFormat = determineDateFormat(date);
+        if (dateFormat == null) {
+            throw new IllegalArgumentException("Can't determine date format in [" + date + "]");
+        }
+        this.date = new GregorianCalendar();
         try {
             Date dateAux = new SimpleDateFormat(dateFormat).parse(date);
             this.date.setTime(dateAux);
