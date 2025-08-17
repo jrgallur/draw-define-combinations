@@ -8,7 +8,7 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>com.draw.define.combinations</groupId>
+    <groupId>com.draw.define-combinations</groupId>
     <artifactId>boot</artifactId>
     <packaging>jar</packaging>
 
@@ -22,15 +22,15 @@
     
         <!-- domain dependency -->
         <dependency>
-            <groupId>com.draw.define.combinations</groupId>
-            <artifactId>domain</artifactId>
+            <groupId>com.draw.define-combinations</groupId>
+            <artifactId>application</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- driven dependency -->
         <dependency>
-            <groupId>com.draw.define.combinations.driven</groupId>
-            <artifactId>draw-datasource</artifactId>
+            <groupId>com.draw.define-combinations.driven</groupId>
+            <artifactId>database</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
