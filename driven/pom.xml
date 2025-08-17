@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>com.draw.define.combinations</groupId>
+    <groupId>com.draw.define-combinations</groupId>
     <artifactId>driven</artifactId>
 
     <properties>

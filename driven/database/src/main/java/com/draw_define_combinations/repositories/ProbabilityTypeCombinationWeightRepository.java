@@ -1,0 +1,9 @@
+package com.draw_define_combinations.repositories;
+
+import com.draw_define_combinations.domain.ProbabilityTypeCombinationWeightMO;
+import com.draw_define_combinations.domain.id.ProbabilityTypeCombinationWeightId;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProbabilityTypeCombinationWeightRepository extends JpaRepository<ProbabilityTypeCombinationWeightMO, ProbabilityTypeCombinationWeightId> {
+    void deleteByProbabilityTypeCombinationId(Integer probabilityTypeCombinationId);
+}
