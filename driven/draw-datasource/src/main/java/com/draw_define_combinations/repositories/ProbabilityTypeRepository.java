@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ProbabilityTypeRepository extends JpaRepository<ProbabilityTypeMO, Short> {
+public interface ProbabilityTypeRepository extends JpaRepository<ProbabilityTypeMO, Integer> {
     Optional<ProbabilityTypeMO> findByCode(String code);
 }

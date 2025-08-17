@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 public class ProbabilityTypeCombination {
     private Integer id;
-
     private String code;
 
     @Builder.Default
