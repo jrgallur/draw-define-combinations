@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 @Data
 @Builder
 public class ProbabilityTypeCombinationWeight {
+    Integer probabilityTypeCombinationId;
     ProbabilityType probabilityType;
     BigDecimal weight;
 

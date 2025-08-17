@@ -1,21 +1,25 @@
 package com.draw_define_combinations.models;
 
+
 import lombok.*;
 
 import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 @Entity
-@Table(name = "draw_probability_type")
-public class DrawProbabilityTypeMO {
+@Table(name = "probability_type")
+public class ProbabilityTypeMO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
-    private Integer date;
-    private String values;
-    private Short numberProbabilityTypeId;
+
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "description")
+    private String description;
 }

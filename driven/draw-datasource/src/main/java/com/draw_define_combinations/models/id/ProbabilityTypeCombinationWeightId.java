@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Builder
-public class ProbabilityTypeWeightId implements Serializable {
+public class ProbabilityTypeCombinationWeightId implements Serializable {
     private Integer probabilityTypeCombinationId;
-    private String probabilityTypeCode;
+    private Integer probabilityTypeId;
 }

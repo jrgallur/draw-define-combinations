@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @NoArgsConstructor
-public class CombinationTypeService {
+public class ProbabilityTypeCombinationService {
     private static final BigDecimal STEP = BigDecimal.valueOf(0.2);
 
     public List<ProbabilityTypeCombination> calculateCombinationsFromTypeList(List<ProbabilityType> probabilityTypeList) {
@@ -36,9 +36,9 @@ public class CombinationTypeService {
 
     private void setCombinationsCodes(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
         for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
-            probabilityTypeCombination.setCombinationList(deleteEmptyProbabilityTypeWeightListItems(probabilityTypeCombination.getCombinationList()));
-            sortProbabilityTypeWeightList(probabilityTypeCombination.getCombinationList());
-            probabilityTypeCombination.setCode(getCodeFromCombinationTypeWeightList(probabilityTypeCombination.getCombinationList()));
+            probabilityTypeCombination.setProbabilityTypeCombinationWeightList(deleteEmptyProbabilityTypeWeightListItems(probabilityTypeCombination.getProbabilityTypeCombinationWeightList()));
+            sortProbabilityTypeWeightList(probabilityTypeCombination.getProbabilityTypeCombinationWeightList());
+            probabilityTypeCombination.setCode(getCodeFromCombinationTypeWeightList(probabilityTypeCombination.getProbabilityTypeCombinationWeightList()));
         }
     }
 

@@ -2,6 +2,7 @@ package com.draw_define_combinations.adapters;
 
 import com.draw_define_combinations.mappers.ProbabilityTypeCombinationMapper;
 import com.draw_define_combinations.models.ProbabilityTypeCombination;
+import com.draw_define_combinations.models.ProbabilityTypeCombinationMO;
 import com.draw_define_combinations.ports.driven.ProbabilityTypeCombinationPort;
 import com.draw_define_combinations.repositories.ProbabilityTypeCombinationRepository;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -23,12 +25,19 @@ public class ProbabilityTypeCombinationAdapter implements ProbabilityTypeCombina
     }
 
     @Override
-    public void upsert(ProbabilityTypeCombination probabilityTypeCombination) {
-        repository.save(mapper.toModel(probabilityTypeCombination));
+    public ProbabilityTypeCombination upsert(ProbabilityTypeCombination probabilityTypeCombination) {
+        ProbabilityTypeCombinationMO model = mapper.toModel(probabilityTypeCombination);
+        ProbabilityTypeCombinationMO result = repository.save(model);
+        return mapper.toDomain(result);
     }
 
     @Override
-    public List<ProbabilityTypeCombination> getAllProbabilityTypeCombinationList() {
-        return repository.findAllWithProbabilityTypeCombinationWeightMOList().stream().map(mapper::toDomain).toList();
+    public List<ProbabilityTypeCombination> getAllProbabilityTypeCombinationWithWeightList() {
+        return repository.findAll().stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public Optional<ProbabilityTypeCombination> findByCode(String code) {
+        return repository.findByCode(code).map(mapper::toDomain);
     }
 }
