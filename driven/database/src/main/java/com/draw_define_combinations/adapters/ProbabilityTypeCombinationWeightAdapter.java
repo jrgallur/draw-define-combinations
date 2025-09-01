@@ -1,5 +1,6 @@
 package com.draw_define_combinations.adapters;
 
+import com.draw_define_combinations.domain.ProbabilityTypeCombinationWeightMO;
 import com.draw_define_combinations.mappers.ProbabilityTypeCombinationWeightMapper;
 import com.draw_define_combinations.domain.ProbabilityTypeCombinationWeight;
 import com.draw_define_combinations.application.ports.driven.ProbabilityTypeCombinationWeightPort;
@@ -19,7 +20,8 @@ public class ProbabilityTypeCombinationWeightAdapter implements ProbabilityTypeC
 
     @Override
     public void saveAll(List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList) {
-        repository.saveAll(probabilityTypeCombinationWeightList.stream().map(mapper::toModel).toList());
+        List<ProbabilityTypeCombinationWeightMO> probabilityTypeCombinationWeightMOList = (probabilityTypeCombinationWeightList.stream().map(mapper::toModel).toList());
+        repository.saveAll(probabilityTypeCombinationWeightMOList);
     }
 
     public void deleteByProbabilityTypeCombinationId(Integer probabilityTypeCombinationId) {

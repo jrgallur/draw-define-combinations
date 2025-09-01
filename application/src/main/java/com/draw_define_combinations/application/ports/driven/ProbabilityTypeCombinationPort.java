@@ -9,7 +9,7 @@ public interface ProbabilityTypeCombinationPort {
     boolean existsByCode(String code);
     ProbabilityTypeCombination upsert(ProbabilityTypeCombination probabilityTypeCombination);
 
-    List<ProbabilityTypeCombination> getAllProbabilityTypeCombinationWithWeightList();
+    List<ProbabilityTypeCombination> getAllSimpleProbabilityTypeCombination();
 
     Optional<ProbabilityTypeCombination> findByCode(String code);
 }

@@ -32,8 +32,8 @@ public class ProbabilityTypeCombinationAdapter implements ProbabilityTypeCombina
     }
 
     @Override
-    public List<ProbabilityTypeCombination> getAllProbabilityTypeCombinationWithWeightList() {
-        return repository.findAll().stream().map(mapper::toDomain).toList();
+    public List<ProbabilityTypeCombination> getAllSimpleProbabilityTypeCombination() {
+        return repository.getAllSimpleProbabilityTypeCombination().stream().map(mapper::toDomain).toList();
     }
 
     @Override

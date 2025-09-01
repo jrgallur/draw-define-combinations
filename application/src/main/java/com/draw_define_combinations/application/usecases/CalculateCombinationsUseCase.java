@@ -33,8 +33,10 @@ public class CalculateCombinationsUseCase {
      * Calculate all possible combinations following the rules of CombinationTypeService.calculateCombinationsFromTypeList and save the new ones into the database
      */
     public void calculateAndSaveNotExistentCombinations() {
+        // Calculate all the combinations and return them as a list
         List<ProbabilityTypeCombination> probabilityTypeCombinationList = getCalculatedCombinationTypeList();
-        saveNotExistentCombinationList(probabilityTypeCombinationList);
+        // Save all not existent combinations
+        saveNotExistentProbabilityTypeCombination(probabilityTypeCombinationList);
     }
 
     public void saveProbabilityCombinations() {
@@ -44,7 +46,7 @@ public class CalculateCombinationsUseCase {
         // Guardar en base de datos las tuplas de tipo_calculo, combinación, probabilidades
 
         // Get the probability type combination list from database
-        List<ProbabilityTypeCombination> probabilityTypeCombinationList = getDatabaseCombinationTypeList();
+        List<ProbabilityTypeCombination> probabilityTypeCombinationList = getDatabaseSimpleCombinationTypeList();
         // For each probabilityTypeCombination
         for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
             // TODO: If not exists the relationship between the draw and the probabilityTypeCombination
@@ -82,8 +84,8 @@ public class CalculateCombinationsUseCase {
         return probabilityTypeCombinationList;
     }
 
-    private List<ProbabilityTypeCombination> getDatabaseCombinationTypeList() {
-        return probabilityTypeCombinationPort.getAllProbabilityTypeCombinationWithWeightList();
+    private List<ProbabilityTypeCombination> getDatabaseSimpleCombinationTypeList() {
+        return probabilityTypeCombinationPort.getAllSimpleProbabilityTypeCombination();
     }
 
     private void logProbabilityTypeCombinationList(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
@@ -99,17 +101,17 @@ public class CalculateCombinationsUseCase {
         log.info("#######");
     }
 
-    private void saveNotExistentCombinationList(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
+    private void saveNotExistentProbabilityTypeCombination(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
         for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
             if (!probabilityTypeCombinationPort.existsByCode(probabilityTypeCombination.getCode())) {
                 ProbabilityTypeCombination probabilityTypeCombinationSaved = probabilityTypeCombinationPort.upsert(probabilityTypeCombination);
-                setProbabilityTypeCombinationIdToWeightList(probabilityTypeCombination, probabilityTypeCombinationSaved.getId());
+                setProbabilityTypeCombinationToWeightList(probabilityTypeCombination, probabilityTypeCombinationSaved);
                 probabilityTypeCombinationWeightPort.saveAll(probabilityTypeCombination.getProbabilityTypeCombinationWeightList());
             }
         }
     }
 
-    private void setProbabilityTypeCombinationIdToWeightList(ProbabilityTypeCombination probabilityTypeCombination, Integer id) {
-        probabilityTypeCombination.getProbabilityTypeCombinationWeightList().forEach(probabilityTypeCombinationWeight -> probabilityTypeCombinationWeight.setProbabilityTypeCombinationId(id));
+    private void setProbabilityTypeCombinationToWeightList(ProbabilityTypeCombination probabilityTypeCombination, ProbabilityTypeCombination probabilityTypeCombinationSaved) {
+        probabilityTypeCombination.getProbabilityTypeCombinationWeightList().forEach(probabilityTypeCombinationWeight -> probabilityTypeCombinationWeight.setProbabilityTypeCombinationId(probabilityTypeCombinationSaved.getId()));
     }
 }
