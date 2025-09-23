@@ -4,7 +4,7 @@ import com.draw_define_combinations.domain.ProbabilityType;
 
 import java.util.List;
 
-public interface ProbabilityTypePort {
+public interface ProbabilityTypeDatasourcePort {
     ProbabilityType getByCode(String code);
 
     List<ProbabilityType> findAll();

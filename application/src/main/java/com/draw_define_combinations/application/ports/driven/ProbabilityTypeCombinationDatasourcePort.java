@@ -5,7 +5,7 @@ import com.draw_define_combinations.domain.ProbabilityTypeCombination;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProbabilityTypeCombinationPort {
+public interface ProbabilityTypeCombinationDatasourcePort {
     boolean existsByCode(String code);
     ProbabilityTypeCombination upsert(ProbabilityTypeCombination probabilityTypeCombination);
 

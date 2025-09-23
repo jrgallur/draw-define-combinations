@@ -4,7 +4,7 @@ import com.draw_define_combinations.domain.ProbabilityTypeCombinationWeight;
 
 import java.util.List;
 
-public interface ProbabilityTypeCombinationWeightPort {
+public interface ProbabilityTypeCombinationWeightDatasourcePort {
     void saveAll(List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList);
     void deleteByProbabilityTypeCombinationId(Integer probabilityTypeCombinationId);
     }

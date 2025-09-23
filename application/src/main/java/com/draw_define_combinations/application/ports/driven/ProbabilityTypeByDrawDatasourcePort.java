@@ -4,6 +4,6 @@ import com.draw_define_combinations.domain.ProbabilityTypeByDraw;
 
 import java.util.List;
 
-public interface ProbabilityTypeByDrawPort {
+public interface ProbabilityTypeByDrawDatasourcePort {
     List<ProbabilityTypeByDraw> findByProbabilityTypeId(Integer probabilityTypeId);
 }

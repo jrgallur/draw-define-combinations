@@ -39,6 +39,17 @@ public class NumberCombination {
      * @param numbers       Array de números
      * @param complementary Complementario
      */
+    public NumberCombination(byte[] numbers, int complementary) {
+        TNumberList tmpNumberList = new TNumberList(numbers);
+        setInternalNumbers(tmpNumberList, (byte) complementary);
+    }
+
+    /**
+     * Constructor que admite un array de números y un complementario
+     *
+     * @param numbers       Array de números
+     * @param complementary Complementario
+     */
     public NumberCombination(int[] numbers, int complementary) {
         TNumberList tmpNumberList = new TNumberList(numbers);
         setInternalNumbers(tmpNumberList, complementary);

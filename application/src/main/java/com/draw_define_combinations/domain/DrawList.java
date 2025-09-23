@@ -208,4 +208,28 @@ public class DrawList {
         draws.put(draw.getDate(), draw);
         orderedNumber.put(draw.getDate(), draws.size());
     }
+
+    /**
+     * Crea y guarda una lista de sorteos de manera ordenada
+     *
+     * @param drawList Lista de sorteos a guardar
+     */
+    public DrawList(List<Draw> drawList) {
+        // Ordenamos la lista de sorteos
+        drawList.sort(null);
+        draws = new HashMap<>();
+        previousDate = new HashMap<>();
+        nextDate = new HashMap<>();
+        // Recorremos la lista (ahora ordenada) secuencialmente
+        for (int cont = 0; cont < drawList.size(); cont++) {
+            draws.put(drawList.get(cont).getDrawDate(), drawList.get(cont));
+            if (cont > 0) {
+                previousDate.put(drawList.get(cont).getDrawDate(), drawList.get(cont - 1).getDrawDate());
+                nextDate.put(drawList.get(cont - 1).getDrawDate(), drawList.get(cont).getDrawDate());
+            }
+        }
+        // Establecemos la primera y la última fecha de los sorteos
+        firstDrawDate = drawList.get(0).getDrawDate();
+        lastDrawDate = drawList.get(drawList.size() - 1).getDrawDate();
+    }
 }

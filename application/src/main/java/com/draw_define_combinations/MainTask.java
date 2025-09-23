@@ -19,7 +19,7 @@ public class MainTask implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Iniciando tarea principal...");
         useCase.calculateAndSaveNotExistentCombinations();
-        useCase.saveProbabilityCombinations();
+        useCase.saveCombinationsProbabilityValues();
         log.info("Tarea completada.");
     }
 }

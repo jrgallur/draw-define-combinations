@@ -1,33 +1,24 @@
 package com.draw_define_combinations.application.usecases;
 
-import com.draw_define_combinations.domain.ProbabilityType;
-import com.draw_define_combinations.domain.ProbabilityTypeByDraw;
-import com.draw_define_combinations.domain.ProbabilityTypeCombination;
-import com.draw_define_combinations.domain.ProbabilityTypeCombinationWeight;
-import com.draw_define_combinations.domain.types.TDateInteger;
-import com.draw_define_combinations.application.ports.driven.ProbabilityTypeByDrawPort;
-import com.draw_define_combinations.application.ports.driven.ProbabilityTypeCombinationPort;
-import com.draw_define_combinations.application.ports.driven.ProbabilityTypeCombinationWeightPort;
-import com.draw_define_combinations.application.ports.driven.ProbabilityTypePort;
+import com.draw_define_combinations.application.ports.driven.*;
+import com.draw_define_combinations.domain.*;
 import com.draw_define_combinations.application.services.ProbabilityTypeCombinationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class CalculateCombinationsUseCase {
-    private final ProbabilityTypePort probabilityTypePort;
-    private final ProbabilityTypeCombinationPort probabilityTypeCombinationPort;
-    private final ProbabilityTypeCombinationWeightPort probabilityTypeCombinationWeightPort;
-    private final ProbabilityTypeByDrawPort probabilityTypeByDrawPort;
+    private final ProbabilityTypeDatasourcePort probabilityTypeDatasourcePort;
+    private final ProbabilityTypeCombinationDatasourcePort probabilityTypeCombinationDatasourcePort;
+    private final ProbabilityTypeCombinationWeightDatasourcePort probabilityTypeCombinationWeightDatasourcePort;
+    private final ProbabilityTypeByDrawDatasourcePort probabilityTypeByDrawDatasourcePort;
     private final ProbabilityTypeCombinationService probabilityTypeCombinationService;
+    private final DrawDatasourcePort drawDatasourcePort;
 
     /**
      * Calculate all possible combinations following the rules of CombinationTypeService.calculateCombinationsFromTypeList and save the new ones into the database
@@ -39,34 +30,42 @@ public class CalculateCombinationsUseCase {
         saveNotExistentProbabilityTypeCombination(probabilityTypeCombinationList);
     }
 
-    public void saveProbabilityCombinations() {
-        // Obtener la lista de combinaciones de la base de datos
-        // obtener la lista de sorteos (para las fechas)
-        // Obtener la lista de las probabilidades de los tipos
-        // Guardar en base de datos las tuplas de tipo_calculo, combinación, probabilidades
-
+    public void saveCombinationsProbabilityValues() {
         // Get the probability type combination list from database
         List<ProbabilityTypeCombination> probabilityTypeCombinationList = getDatabaseSimpleCombinationTypeList();
-        // For each probabilityTypeCombination
-        for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
-            // TODO: If not exists the relationship between the draw and the probabilityTypeCombination
-            Map<Integer, Map<TDateInteger, ProbabilityTypeByDraw>> numberProbabilityListByTDateIntegerMapByNumberProbabilityTypeId = new HashMap<>();
+        // Get the different draws types
+        List<Short> drawTypeIdList = drawDatasourcePort.getDrawTypeIdList();
+        // For each drawType...
+        for (Short drawTypeId : drawTypeIdList) {
+            // Get the draw list
+            DrawList drawList = drawDatasourcePort.getDrawListByDrawTypeId(drawTypeId);
+            // For each probabilityTypeCombination
+            for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
+                // TODO: Para cada fecha de los sorteos
+                // TODO: Obtener el listado de los pesos por tipo de las combinaciones
+                // TODO: Obtener el valor de las probabilidades por tipo para un sorteo determinado
+                // TODO: Calcular el valor de las probabilidades por combinación, sumando y dividiendo los valores de las probabilidades según el tipo de la combinación
+                // TODO: Guardar en base de datos el valor de las probabilidades por combinación y sorteo
 
-            // Para cada combinación
-            probabilityTypeCombination.getProbabilityTypeCombinationWeightList().stream().forEach(probabilityTypeCombinationWeight -> {
-                // Obtener la lista de probabilidades calculadas para el tipo de la combinación
-                List<ProbabilityTypeByDraw> probabilityTypeByDraw = probabilityTypeByDrawPort.findByProbabilityTypeId(probabilityTypeCombinationWeight.getProbabilityType().getId());
-                // Crear un Map fecha -> Lista de probabilidades del tipo de la combinación
-                Map<TDateInteger, ProbabilityTypeByDraw> numberProbabilityListMap = probabilityTypeByDraw.stream().collect(Collectors.toMap(item -> item.getCalculateDrawDate(), item -> item));
-                // Guardar en el Map de Tipo -> (fecha -> Lista de probabilidades) el valor
-                numberProbabilityListByTDateIntegerMapByNumberProbabilityTypeId.put(probabilityTypeCombinationWeight.getProbabilityType().getId(), numberProbabilityListMap);
-            });
+/*
+                Map<Integer, Map<TDateInteger, ProbabilityTypeByDraw>> numberProbabilityListByTDateIntegerMapByNumberProbabilityTypeId = new HashMap<>();
+                // For each weight of the combination
+                probabilityTypeCombination.getProbabilityTypeCombinationWeightList().stream().forEach(probabilityTypeCombinationWeight -> {
+                    // Get the calculated probabilities for the type of the weight
+                    List<ProbabilityTypeByDraw> probabilityTypeByDrawList = probabilityTypeByDrawDatasourcePort.findByProbabilityTypeId(probabilityTypeCombinationWeight.getProbabilityType().getId());
+                    // Create a Map (date -> probability type -> calculated probabilities by type) for each draw date
+                    // TODO
+                    Map<TDateInteger, Map<ProbabilityType, ProbabilityTypeByDraw>> probabilitiesListByDrawMap = probabilityTypeByDrawList.stream().collect(Collectors.toMap(item -> item.getCalculateDrawDate(), item -> item));
+                    numberProbabilityListByTDateIntegerMapByNumberProbabilityTypeId.put(probabilityTypeCombinationWeight.getProbabilityType().getId(), probabilitiesListByDrawMap);
+                    // Guardar en el Map de Tipo -> (fecha -> Lista de probabilidades) el valor
+                });
 
-            // Elegimos el primer tipo
+                // Elegimos el primer tipo
 
-            // Recorremos el tipo fecha a fecha
-            // Si existen todos los valores calculados para todos los tipos para la fecha actual, calculamos la combinación
-
+                // Recorremos el tipo fecha a fecha
+                // Si existen todos los valores calculados para todos los tipos para la fecha actual, calculamos la combinación
+*/
+            }
         }
     }
 
@@ -75,7 +74,7 @@ public class CalculateCombinationsUseCase {
     }
 
     private List<ProbabilityTypeCombination> getCalculatedCombinationTypeList() {
-        List<ProbabilityType> probabilityTypeList = probabilityTypePort.findAll();
+        List<ProbabilityType> probabilityTypeList = probabilityTypeDatasourcePort.findAll();
 
         List<ProbabilityTypeCombination> probabilityTypeCombinationList = probabilityTypeCombinationService.calculateCombinationsFromTypeList(probabilityTypeList);
 
@@ -85,7 +84,7 @@ public class CalculateCombinationsUseCase {
     }
 
     private List<ProbabilityTypeCombination> getDatabaseSimpleCombinationTypeList() {
-        return probabilityTypeCombinationPort.getAllSimpleProbabilityTypeCombination();
+        return probabilityTypeCombinationDatasourcePort.getAllSimpleProbabilityTypeCombination();
     }
 
     private void logProbabilityTypeCombinationList(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
@@ -103,10 +102,10 @@ public class CalculateCombinationsUseCase {
 
     private void saveNotExistentProbabilityTypeCombination(List<ProbabilityTypeCombination> probabilityTypeCombinationList) {
         for (ProbabilityTypeCombination probabilityTypeCombination : probabilityTypeCombinationList) {
-            if (!probabilityTypeCombinationPort.existsByCode(probabilityTypeCombination.getCode())) {
-                ProbabilityTypeCombination probabilityTypeCombinationSaved = probabilityTypeCombinationPort.upsert(probabilityTypeCombination);
+            if (!probabilityTypeCombinationDatasourcePort.existsByCode(probabilityTypeCombination.getCode())) {
+                ProbabilityTypeCombination probabilityTypeCombinationSaved = probabilityTypeCombinationDatasourcePort.upsert(probabilityTypeCombination);
                 setProbabilityTypeCombinationToWeightList(probabilityTypeCombination, probabilityTypeCombinationSaved);
-                probabilityTypeCombinationWeightPort.saveAll(probabilityTypeCombination.getProbabilityTypeCombinationWeightList());
+                probabilityTypeCombinationWeightDatasourcePort.saveAll(probabilityTypeCombination.getProbabilityTypeCombinationWeightList());
             }
         }
     }

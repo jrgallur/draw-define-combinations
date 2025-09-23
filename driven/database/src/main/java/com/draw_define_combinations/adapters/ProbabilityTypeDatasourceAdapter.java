@@ -1,6 +1,6 @@
 package com.draw_define_combinations.adapters;
 
-import com.draw_define_combinations.application.ports.driven.ProbabilityTypePort;
+import com.draw_define_combinations.application.ports.driven.ProbabilityTypeDatasourcePort;
 import com.draw_define_combinations.domain.ProbabilityType;
 import com.draw_define_combinations.mappers.ProbabilityTypeMapper;
 import com.draw_define_combinations.repositories.ProbabilityTypeRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ProbabilityTypeAdapter implements ProbabilityTypePort {
+public class ProbabilityTypeDatasourceAdapter implements ProbabilityTypeDatasourcePort {
     private final ProbabilityTypeRepository repository;
     private final ProbabilityTypeMapper mapper;
 
