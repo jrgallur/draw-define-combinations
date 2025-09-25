@@ -13,6 +13,10 @@ public class DrawList {
     private Map<TDateInteger, TDateInteger> previousDate = new HashMap<>();
     private Map<TDateInteger, TDateInteger> nextDate = new HashMap<>();
 
+    public TDateInteger getInitialDrawDate() {
+        return findFirstDrawDateFromDate(new TDateInteger(19950101)); // Descartamos los anteriores como irrelevantes
+    }
+
     /**
      * -- GETTER --
      *  Devuelve la fecha del primer sorteo registrado
@@ -231,5 +235,15 @@ public class DrawList {
         // Establecemos la primera y la última fecha de los sorteos
         firstDrawDate = drawList.get(0).getDrawDate();
         lastDrawDate = drawList.get(drawList.size() - 1).getDrawDate();
+    }
+
+    public TDateInteger findFirstDrawDateFromDate(TDateInteger dateFrom) {
+        if (getDraw(dateFrom)!=null) {
+            return dateFrom;
+        }
+        while (getDraw(dateFrom)==null) {
+            dateFrom = dateFrom.add(TDateInteger.addTypes.DAY, 1);
+        }
+        return dateFrom;
     }
 }

@@ -1,5 +1,6 @@
 package com.draw_define_combinations.adapters;
 
+import com.draw_define_combinations.domain.types.TDateInteger;
 import com.draw_define_combinations.mappers.ProbabilityTypeByDrawMapper;
 import com.draw_define_combinations.domain.ProbabilityTypeByDraw;
 import com.draw_define_combinations.application.ports.driven.ProbabilityTypeByDrawDatasourcePort;
@@ -20,5 +21,10 @@ public class ProbabilityTypeByDrawDatasourceAdapter implements ProbabilityTypeBy
     @Override
     public List<ProbabilityTypeByDraw> findByProbabilityTypeId(Integer probabilityTypeId) {
         return repository.findByProbabilityTypeId(probabilityTypeId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<ProbabilityTypeByDraw> findByDrawTypeIdAndDrawDate(Short drawTypeId, TDateInteger drawDate) {
+        return repository.findByDrawTypeIdAndDrawDate(drawTypeId, drawDate.toInteger()).stream().map(mapper::toDomain).toList();
     }
 }
