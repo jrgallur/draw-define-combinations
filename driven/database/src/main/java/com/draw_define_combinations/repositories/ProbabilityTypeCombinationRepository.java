@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface ProbabilityTypeCombinationRepository extends JpaRepository<ProbabilityTypeCombinationMO, Integer> {
     Optional<ProbabilityTypeCombinationMO> findByCode(String code);
 
-    @Query("SELECT ptc.id, ptc.code FROM ProbabilityTypeCombinationMO ptc")
+    @Query("SELECT ptc.id AS id, ptc.code AS code FROM ProbabilityTypeCombinationMO ptc")
     List<ProbabilityTypeCombinationProjection> getAllSimpleProbabilityTypeCombination();
 }

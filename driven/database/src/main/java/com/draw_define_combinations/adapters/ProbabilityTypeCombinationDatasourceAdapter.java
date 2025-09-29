@@ -1,9 +1,9 @@
 package com.draw_define_combinations.adapters;
 
-import com.draw_define_combinations.mappers.ProbabilityTypeCombinationMapper;
+import com.draw_define_combinations.application.ports.driven.ProbabilityTypeCombinationDatasourcePort;
 import com.draw_define_combinations.domain.ProbabilityTypeCombination;
 import com.draw_define_combinations.domain.ProbabilityTypeCombinationMO;
-import com.draw_define_combinations.application.ports.driven.ProbabilityTypeCombinationDatasourcePort;
+import com.draw_define_combinations.mappers.ProbabilityTypeCombinationMapper;
 import com.draw_define_combinations.repositories.ProbabilityTypeCombinationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
