@@ -15,7 +15,8 @@ public interface ProbabilityTypeByDrawMapper {
     default ProbabilityTypeByDraw toDomain(ProbabilityTypeByDrawMO probabilityTypeByDrawMO) {
         ProbabilityTypeByDraw probabilityTypeByDraw = new ProbabilityTypeByDraw();
         probabilityTypeByDraw.setType(ProbabilityType.builder().id(probabilityTypeByDrawMO.getProbabilityTypeId()).build());
-        probabilityTypeByDraw.setCalculateDrawDate(new TDateInteger(probabilityTypeByDrawMO.getDate()));
+        probabilityTypeByDraw.setCalculateDrawDate(new TDateInteger(probabilityTypeByDrawMO.getDrawDate()));
+        probabilityTypeByDraw.setDrawTypeId(probabilityTypeByDrawMO.getDrawTypeId());
         probabilityTypeByDraw.setNumberList(stringToNumberList(probabilityTypeByDrawMO.getValues()));
 
         return probabilityTypeByDraw;

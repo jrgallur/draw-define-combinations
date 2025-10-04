@@ -19,8 +19,9 @@ import java.math.BigDecimal;
 @IdClass(ProbabilityTypeCombinationWeightId.class)
 public class ProbabilityTypeCombinationWeightMO {
     @Id
-    @Column(name = "probability_type_combination_id")
-    private Integer probabilityTypeCombinationId;
+    @ManyToOne
+    @JoinColumn(name="probability_type_combination_id", nullable=false)
+    private ProbabilityTypeCombinationMO probabilityTypeCombination;
 
     @Id
     @Column(name = "probability_type_id")

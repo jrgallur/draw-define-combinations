@@ -17,8 +17,11 @@ public class ProbabilityTypeByDrawMO {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "date")
-    private Integer date;
+    @Column
+    private Integer drawDate;
+
+    @Column
+    private Short drawTypeId;
 
     @Column(name = "values")
     private String values;

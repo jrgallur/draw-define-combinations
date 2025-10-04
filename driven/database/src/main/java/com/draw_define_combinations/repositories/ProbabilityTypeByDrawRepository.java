@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ProbabilityTypeByDrawRepository extends JpaRepository<ProbabilityTypeByDrawMO, Integer> {
     List<ProbabilityTypeByDrawMO> findByProbabilityTypeId(Integer probabilityTypeId);
+    List<ProbabilityTypeByDrawMO> findByDrawTypeIdAndDrawDate(Short drawTypeId, Integer drawDate);
+
 }

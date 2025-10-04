@@ -16,6 +16,7 @@ import java.util.List;
 public class ProbabilityTypeByDraw {
     private List<BigDecimal> numberList;
     private TDateInteger calculateDrawDate;
+    private Short drawTypeId;
     private ProbabilityType type;
 
     public ProbabilityTypeByDraw() {
