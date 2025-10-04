@@ -28,13 +28,16 @@ public class CalculateCombinationsUseCase {
      * Calculate all possible combinations following the rules of CombinationTypeService.calculateCombinationsFromTypeList and save the new ones into the database
      */
     public void calculateAndSaveNotExistentCombinations() {
+        log.info("calculateAndSaveNotExistentCombinations - Inicio");
         // Calculate all the combinations and return them as a list
         List<ProbabilityTypeCombination> probabilityTypeCombinationList = getCalculatedCombinationTypeList();
         // Save all not existent combinations
         saveNotExistentProbabilityTypeCombination(probabilityTypeCombinationList);
+        log.info("calculateAndSaveNotExistentCombinations - Fin");
     }
 
-    public void saveCombinationsProbabilityValues() {
+    public void saveCombinationsProbabilityValues_old() {
+        log.info("saveCombinationsProbabilityValues - Inicio");
         // Get the probability type combination list from database
         List<ProbabilityTypeCombination> probabilityTypeCombinationList = getDatabaseSimpleCombinationTypeList();
         // Get the different draws types
@@ -47,7 +50,7 @@ public class CalculateCombinationsUseCase {
             DrawList drawList = drawDatasourcePort.getDrawListByDrawTypeId(drawTypeId);
 
             // Get the not existen tuples of ProbabilityTypeCombinationByDraw which should exist
-            List<ProbabilityTypeCombinationByDraw> probabilityTypeCombinationByDrawListUnexistent = getNotDefinedProbabilityTypeCombinationByDrawList(drawTypeId, probabilityTypeCombinationList, drawList);
+            List<ProbabilityTypeCombinationByDraw> probabilityTypeCombinationByDrawListUnexistent = getNotDefinedProbabilityTypeCombinationByDrawList_old(drawTypeId, probabilityTypeCombinationList, drawList);
 
             // For each one
             for (ProbabilityTypeCombinationByDraw probabilityTypeCombinationByDrawToCreate : probabilityTypeCombinationByDrawListUnexistent) {
@@ -62,14 +65,15 @@ public class CalculateCombinationsUseCase {
                 // Get the probabilities values for a draw type and draw date
                 List<ProbabilityTypeByDraw> probabilityTypeByDrawList = probabilityTypeByDrawDatasourcePort.findByDrawTypeIdAndDrawDate(drawTypeId, drawDate);
                 // Calculate the combination probabilities adding and multiplying probabilities by type
-                ProbabilityTypeCombinationByDraw probabilityTypeCombinationByDraw = calculateCombinationProbabilityValues(drawTypeId, drawDate, probabilityTypeCombinationWeightList, probabilityTypeByDrawList);
+                ProbabilityTypeCombinationByDraw probabilityTypeCombinationByDraw = calculateCombinationProbabilityValues(drawTypeId, drawDate, probabilityTypeCombinationWeightList, probabilityTypeByDrawList, probabilityTypeCombinationId);
                 // Save the probabilities combination by draw
                 probabilityTypeCombinationByDrawDatasourcePort.save(probabilityTypeCombinationByDraw);
             }
         }
+        log.info("saveCombinationsProbabilityValues - Fin");
     }
 
-    private List<ProbabilityTypeCombinationByDraw> getNotDefinedProbabilityTypeCombinationByDrawList(Short drawTypeId, List<ProbabilityTypeCombination> probabilityTypeCombinationList, DrawList drawList) {
+    private List<ProbabilityTypeCombinationByDraw> getNotDefinedProbabilityTypeCombinationByDrawList_old(Short drawTypeId, List<ProbabilityTypeCombination> probabilityTypeCombinationList, DrawList drawList) {
         // Creates an initial list with all the possible values of combinations by  draws (starting on initialDrawDate)
         List<ProbabilityTypeCombinationByDraw> probabilityTypeCombinationByDrawPossibleList = new ArrayList<>();
         probabilityTypeCombinationList.forEach(probabilityTypeCombination -> {
@@ -98,7 +102,75 @@ public class CalculateCombinationsUseCase {
                 .collect(Collectors.toList());
     }
 
-    private ProbabilityTypeCombinationByDraw calculateCombinationProbabilityValues(Short drawTypeId, TDateInteger drawDate, List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList, List<ProbabilityTypeByDraw> probabilityTypeByDrawList) {
+    public void saveCombinationsProbabilityValues() {
+        // Get the probability type combination list from database
+        List<ProbabilityTypeCombination> probabilityTypeCombinationList = getDatabaseSimpleCombinationTypeList();
+        // Get the different draws types
+        List<Short> drawTypeIdList = drawDatasourcePort.getDrawTypeIdList();
+        // For each drawType...
+        for (Short drawTypeId : drawTypeIdList) {
+            // Get the existing combinations by draw
+            List<ProbabilityTypeCombinationByDraw> probabilityTypeCombinationByDrawExistingList = probabilityTypeCombinationByDrawDatasourcePort.findByDrawTypeIdSimple(drawTypeId);
+            // Convert the existing combinations by draw list in a Set for efficiency
+            Set<String> probabilityTypeCombinationByDrawExistingSet = probabilityTypeCombinationByDrawExistingList.stream()
+                    .map(p -> p.getDrawDate() + "|" + p.getProbabilityTypeCombinationId())
+                    .collect(Collectors.toSet());
+
+            // Initializes a Map to optimize
+            Map<Integer, List<ProbabilityTypeCombinationWeight>> probabilityTypeCombinationWeightMap = new HashMap<>();
+            // Get the draw list
+            DrawList drawList = drawDatasourcePort.getDrawListByDrawTypeId(drawTypeId);
+
+            Draw draw = drawList.getDraw(drawList.getInitialDrawDate());
+
+            while (draw!=null) {
+                // Get the not existen tuples of ProbabilityTypeCombinationByDraw which should exist
+                List<ProbabilityTypeCombinationByDraw> probabilityTypeCombinationByDrawListNonexistent = getNotDefinedProbabilityTypeCombinationByDraw(probabilityTypeCombinationByDrawExistingSet, probabilityTypeCombinationList, draw);
+
+                // For each one
+                for (ProbabilityTypeCombinationByDraw probabilityTypeCombinationByDrawToCreate : probabilityTypeCombinationByDrawListNonexistent) {
+                    Integer probabilityTypeCombinationId = probabilityTypeCombinationByDrawToCreate.getProbabilityTypeCombinationId();
+                    if (!probabilityTypeCombinationWeightMap.containsKey(probabilityTypeCombinationId)) {
+                        // Get the weight of the combination
+                        List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList = probabilityTypeCombinationWeightDatasourcePort.findByProbabilityTypeCombination(probabilityTypeCombinationId);
+                        probabilityTypeCombinationWeightMap.put(probabilityTypeCombinationId, probabilityTypeCombinationWeightList);
+                    }
+                    List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList = probabilityTypeCombinationWeightMap.get(probabilityTypeCombinationId);
+                    TDateInteger drawDate = probabilityTypeCombinationByDrawToCreate.getDrawDate();
+                    // Get the probabilities values for a draw type and draw date
+                    List<ProbabilityTypeByDraw> probabilityTypeByDrawList = probabilityTypeByDrawDatasourcePort.findByDrawTypeIdAndDrawDate(drawTypeId, drawDate);
+                    // Calculate the combination probabilities adding and multiplying probabilities by type
+                    ProbabilityTypeCombinationByDraw probabilityTypeCombinationByDraw = calculateCombinationProbabilityValues(drawTypeId, drawDate, probabilityTypeCombinationWeightList, probabilityTypeByDrawList, probabilityTypeCombinationId);
+                    // Save the probabilities combination by draw
+                    probabilityTypeCombinationByDrawDatasourcePort.save(probabilityTypeCombinationByDraw);
+                }
+                draw = drawList.getNextDraw(draw.getDrawDate());
+            }
+        }
+        log.info("saveCombinationsProbabilityValues - Fin");
+    }
+
+    private List<ProbabilityTypeCombinationByDraw> getNotDefinedProbabilityTypeCombinationByDraw(Set<String> probabilityTypeCombinationByDrawExistingSet, List<ProbabilityTypeCombination> probabilityTypeCombinationList, Draw draw) {
+        // Creates an initial list with all the possible values of combinations by one draw
+        List<ProbabilityTypeCombinationByDraw> probabilityTypeCombinationByDrawPossibleList = new ArrayList<>();
+        probabilityTypeCombinationList.forEach(probabilityTypeCombination -> {
+            if (draw!=null) {
+                probabilityTypeCombinationByDrawPossibleList.add(
+                        ProbabilityTypeCombinationByDraw.builder()
+                                .drawDate(draw.getDrawDate())
+                                .probabilityTypeCombinationId(probabilityTypeCombination.getId())
+                                .build()
+                );
+            }
+        });
+
+        // Return the possible list without the existent ones
+        return probabilityTypeCombinationByDrawPossibleList.stream()
+                .filter(a -> !probabilityTypeCombinationByDrawExistingSet.contains(a.getDrawDate() + "|" + a.getProbabilityTypeCombinationId()))
+                .collect(Collectors.toList());
+    }
+
+    private ProbabilityTypeCombinationByDraw calculateCombinationProbabilityValues(Short drawTypeId, TDateInteger drawDate, List<ProbabilityTypeCombinationWeight> probabilityTypeCombinationWeightList, List<ProbabilityTypeByDraw> probabilityTypeByDrawList, Integer probabilityTypeCombinationId) {
         List<BigDecimal> probabilitiesByCombinationList = new ArrayList<>(Collections.nCopies(49, new BigDecimal(0)));
         for (ProbabilityTypeCombinationWeight probabilityTypeCombinationWeight : probabilityTypeCombinationWeightList) {
             ProbabilityTypeByDraw probabilityTypeByDraw = probabilityTypeByDrawList.stream().filter(type -> type.getType().getId().equals(probabilityTypeCombinationWeight.getProbabilityType().getId())).findFirst().orElse(null);
@@ -114,7 +186,7 @@ public class CalculateCombinationsUseCase {
         return ProbabilityTypeCombinationByDraw.builder()
                 .drawDate(drawDate)
                 .drawTypeId(drawTypeId)
-                .probabilityTypeCombinationId(probabilityTypeCombinationWeightList.get(0).getProbabilityTypeCombinationId())
+                .probabilityTypeCombinationId(probabilityTypeCombinationId)
                 .numberList(probabilitiesByCombinationList)
                 .build();
     }
