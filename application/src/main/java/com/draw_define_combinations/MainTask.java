@@ -16,9 +16,10 @@ public class MainTask implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("Iniciando tarea principal...");
         useCase.calculateAndSaveNotExistentCombinations();
+        useCase.saveCombinationsProbabilityValues();
         log.info("Tarea completada.");
     }
 }

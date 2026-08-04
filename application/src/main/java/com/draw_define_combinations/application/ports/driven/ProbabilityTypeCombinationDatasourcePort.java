@@ -3,13 +3,10 @@ package com.draw_define_combinations.application.ports.driven;
 import com.draw_define_combinations.domain.ProbabilityTypeCombination;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProbabilityTypeCombinationDatasourcePort {
-    boolean existsByCode(String code);
+    List<String> findByCodeList(List<String> code);
     ProbabilityTypeCombination upsert(ProbabilityTypeCombination probabilityTypeCombination);
 
     List<ProbabilityTypeCombination> getAllSimpleProbabilityTypeCombination();
-
-    Optional<ProbabilityTypeCombination> findByCode(String code);
 }

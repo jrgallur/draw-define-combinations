@@ -1,9 +1,7 @@
 package com.draw_define_combinations.domain;
 
 import com.draw_define_combinations.domain.types.TDateInteger;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,11 +11,13 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class ProbabilityTypeByDraw {
     private List<BigDecimal> numberList;
-    private TDateInteger calculateDrawDate;
+    private TDateInteger drawDate;
     private Short drawTypeId;
-    private ProbabilityType type;
+    private ProbabilityType probabilityType;
 
     public ProbabilityTypeByDraw() {
         numberList = new ArrayList<>(Collections.nCopies(49, new BigDecimal(0)));

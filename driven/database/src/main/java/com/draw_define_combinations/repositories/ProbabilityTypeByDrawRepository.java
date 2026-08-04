@@ -7,7 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProbabilityTypeByDrawRepository extends JpaRepository<ProbabilityTypeByDrawMO, Integer> {
-    List<ProbabilityTypeByDrawMO> findByProbabilityTypeId(Integer probabilityTypeId);
-    List<ProbabilityTypeByDrawMO> findByDrawTypeIdAndDrawDate(Short drawTypeId, Integer drawDate);
-
+    List<ProbabilityTypeByDrawMO> findByDrawTypeId(Short drawTypeId);
 }

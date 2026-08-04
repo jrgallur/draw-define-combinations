@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -20,8 +19,8 @@ public class ProbabilityTypeCombinationDatasourceAdapter implements ProbabilityT
     private final ProbabilityTypeCombinationMapper mapper;
 
     @Override
-    public boolean existsByCode(String code) {
-        return repository.findByCode(code).isPresent();
+    public List<String> findByCodeList(List<String> codeList) {
+        return repository.findAllByCodeIn(codeList).stream().map(ProbabilityTypeCombinationMO::getCode).toList();
     }
 
     @Override
@@ -34,10 +33,5 @@ public class ProbabilityTypeCombinationDatasourceAdapter implements ProbabilityT
     @Override
     public List<ProbabilityTypeCombination> getAllSimpleProbabilityTypeCombination() {
         return repository.getAllSimpleProbabilityTypeCombination().stream().map(mapper::toDomain).toList();
-    }
-
-    @Override
-    public Optional<ProbabilityTypeCombination> findByCode(String code) {
-        return repository.findByCode(code).map(mapper::toDomain);
     }
 }

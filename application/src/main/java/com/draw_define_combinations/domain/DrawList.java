@@ -14,7 +14,7 @@ public class DrawList {
     private Map<TDateInteger, TDateInteger> nextDate = new HashMap<>();
 
     public TDateInteger getInitialDrawDate() {
-        return findFirstDrawDateFromDate(new TDateInteger(19950101)); // Descartamos los anteriores como irrelevantes
+        return findFirstDrawDateFromDate(new TDateInteger(19910101)); // Descartamos los anteriores como irrelevantes
     }
 
     /**
@@ -120,10 +120,10 @@ public class DrawList {
      * @return La fecha del sorteo siguiente a la fecha recibida como parámetro o null si no se encuentra ninguna
      */
     public TDateInteger findExistingNextDate(TDateInteger date) {
-        // Primero busco la fecha anterior en el hash
-        TDateInteger nextDrawDate = previousDate.get(date);
+        // Primero busco la fecha siguiente en el hash
+        TDateInteger nextDrawDate = nextDate.get(date);
         // Si no la tengo, hay que hacer una búsqueda a mano
-        if (nextDrawDate == null && lastDrawDate.compareTo(date) > 0) {
+        if (nextDrawDate == null && date.isLowerThan(lastDrawDate)) {
             // Compruebo si existe alguna fecha en la lista mayor a la recibida
             TDateInteger ds = new TDateInteger(date.toInteger());
             while (nextDrawDate == null) {

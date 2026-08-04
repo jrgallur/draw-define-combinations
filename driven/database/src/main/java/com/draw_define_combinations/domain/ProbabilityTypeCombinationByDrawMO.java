@@ -1,6 +1,5 @@
 package com.draw_define_combinations.domain;
 
-import com.draw_define_combinations.domain.id.DrawId;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,10 +10,8 @@ import javax.persistence.*;
 @Setter
 @Builder
 @Entity
-@IdClass(DrawId.class)
 @Table(name = "probability_type_combination_by_draw", schema = "public")
 public class ProbabilityTypeCombinationByDrawMO {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prob_comb_draw_seq")
     @SequenceGenerator(
